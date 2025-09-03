@@ -1,4 +1,4 @@
-package org.example.bank_rest_p_n.entity;
+package org.example.bank_rest_p_n.model.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -29,4 +29,8 @@ public class MyUser {
     private String firstName;
 
     private String lastName;
+
+    private String email;
+
+    private String password;
 }

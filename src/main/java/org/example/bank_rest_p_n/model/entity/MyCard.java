@@ -1,8 +1,9 @@
-package org.example.bank_rest_p_n.entity;
+package org.example.bank_rest_p_n.model.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
-import org.example.bank_rest_p_n.entity.enumClass.CardStatus;
+import org.example.bank_rest_p_n.model.enumClass.CardStatus;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.math.BigDecimal;
@@ -39,8 +40,10 @@ public class MyCard {
     @Column(name = "expiry_date")
     private LocalDate expiryDate;
 
+    @Enumerated(EnumType.STRING)
     private CardStatus status;
 
+    @DecimalMin("0.00")
     private BigDecimal balance;
 
     @Version

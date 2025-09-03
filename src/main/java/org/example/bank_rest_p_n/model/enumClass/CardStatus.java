@@ -1,4 +1,4 @@
-package org.example.bank_rest_p_n.entity.enumClass;
+package org.example.bank_rest_p_n.model.enumClass;
 
 /**
  * CardStatus — [comment]

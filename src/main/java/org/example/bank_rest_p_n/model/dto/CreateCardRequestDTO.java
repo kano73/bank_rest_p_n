@@ -1,5 +1,6 @@
-package org.example.bank_rest_p_n.entity.dto;
+package org.example.bank_rest_p_n.model.dto;
 
+import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,5 +15,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateCardRequestDTO {
-    private String cardOwner;
+    @Email
+    private String userId;
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 /**
- * UpdateCardRequestDTO — [comment]
+ * TransactionCardRequestDTO — [comment]
  *
  * @author Pavel Nenahov
  * @version 1.0
@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class UpdateCardRequestDTO {
+public class TransactionCardRequestDTO {
     @NotBlank
     private String fromCard;
 
