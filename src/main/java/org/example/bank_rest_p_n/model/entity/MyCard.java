@@ -1,0 +1,48 @@
+package org.example.bank_rest_p_n.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.example.bank_rest_p_n.entity.enumClass.CardStatus;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+/**
+ * MyCard — [comment]
+ *
+ * @author Pavel Nenahov
+ * @version 1.0
+ * @since 03/09/2025
+ */
+
+@Entity
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class MyCard {
+
+    @Id
+    @UuidGenerator
+    private String id;
+
+    @Column(length = 19, nullable = false, unique = true)
+    private String number;
+
+    @ManyToOne
+    private MyUser owner;
+
+    @Column(name = "expiry_date")
+    private LocalDate expiryDate;
+
+    private CardStatus status;
+
+    private BigDecimal balance;
+
+    @Version
+    private int version;
+}
