@@ -11,5 +11,6 @@ package org.example.bank_rest_p_n.model.enumClass;
 public enum CardStatus {
     ACTIVE,
     BLOCKED,
-    EXPIRED;
+    EXPIRED,
+    REQUESTED_FOR_DELETION,
 }

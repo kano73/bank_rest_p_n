@@ -1,11 +1,11 @@
 package org.example.bank_rest_p_n.model.dto;
 
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * CreateCardRequestDTO — [comment]
+ * AdminUpdateUserDTO — [comment]
  *
  * @author Pavel Nenahov
  * @version 1.0
@@ -14,6 +14,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateCardRequestDTO {
+public class AdminUpdateUserDTO {
+    @NotNull
     private String userId;
+    @NotNull
+    private Boolean isBlocked;
 }

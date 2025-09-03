@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * UsersIdDTO — [comment]
+ * CardNumberDTO — [comment]
  *
  * @author Pavel Nenahov
  * @version 1.0
@@ -13,6 +13,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UsersIdDTO {
-    private String id;
+public class CardNumberDTO {
+    private String cardNumber;
 }

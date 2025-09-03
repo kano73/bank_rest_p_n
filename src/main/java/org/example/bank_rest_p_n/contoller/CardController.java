@@ -3,12 +3,15 @@ package org.example.bank_rest_p_n.contoller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.bank_rest_p_n.model.details.MyUserDetails;
+import org.example.bank_rest_p_n.model.dto.CardNumberDTO;
+import org.example.bank_rest_p_n.model.dto.CardResponseDTO;
 import org.example.bank_rest_p_n.model.dto.TransactionCardRequestDTO;
 import org.example.bank_rest_p_n.model.entity.MyCard;
 import org.example.bank_rest_p_n.service.CardService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -31,9 +34,15 @@ public class CardController {
     }
 
     @GetMapping("/my_cards")
-    public List<MyCard> myAccounts(@AuthenticationPrincipal MyUserDetails userDetails,
-                                   @RequestParam("page") int page) {
-        return cardService.findUsersCards(userDetails.myUser().getId(), page);
+    public List<CardResponseDTO> myAccounts(@AuthenticationPrincipal MyUserDetails userDetails,
+                                            @RequestParam("page") int page) {
+        return cardService.findUsersCardsById(userDetails.myUser().getId(), page);
+    }
+
+    @GetMapping("/balance")
+    public BigDecimal balance(@AuthenticationPrincipal MyUserDetails userDetails,
+                              @RequestBody CardNumberDTO requestDTO) {
+        return cardService.getBalanceOfCard(userDetails.myUser().getId(), requestDTO.getCardNumber());
     }
 
     @PutMapping("/transaction")

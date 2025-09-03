@@ -1,11 +1,10 @@
 package org.example.bank_rest_p_n.model.dto;
 
-import jakarta.validation.constraints.Email;
 import lombok.Getter;
 import lombok.Setter;
 
 /**
- * CreateCardRequestDTO — [comment]
+ * DeleteCardDTO — [comment]
  *
  * @author Pavel Nenahov
  * @version 1.0
@@ -14,6 +13,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateCardRequestDTO {
-    private String userId;
+public class DeleteCardDTO {
+
+    private String cardNumber;
+
 }
+

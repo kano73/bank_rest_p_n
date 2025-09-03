@@ -25,6 +25,10 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedEntityGraph(
+        name = "Card.withOwner",
+        attributeNodes = @NamedAttributeNode("owner")
+)
 public class MyCard {
 
     @Id
