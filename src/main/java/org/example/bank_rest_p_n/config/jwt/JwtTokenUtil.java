@@ -1,10 +1,10 @@
 package org.example.bank_rest_p_n.config.jwt;
 
-import com.mary.sharik.exception.NoDataFoundException;
-import com.mary.sharik.model.entity.MyUser;
-import com.mary.sharik.model.enumClass.TokenType;
-import com.mary.sharik.repository.MyUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.example.bank_rest_p_n.exception.NoDataFoundException;
+import org.example.bank_rest_p_n.model.entity.MyUser;
+import org.example.bank_rest_p_n.model.enumClass.TokenType;
+import org.example.bank_rest_p_n.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Component;
@@ -19,16 +19,13 @@ public class JwtTokenUtil {
 
     private final JwtEncoder encoder;
     private final JwtDecoder decoder;
-    private final MyUserRepository myUserRepository;
+    private final UserRepository myUserRepository;
 
-    @Value("${jwt.access-token.expiry:PT1H}")
+    @Value("${jwt.access-token.expiry:PT12H}")
     private Duration accessTokenExpiry;
 
     @Value("${jwt.refresh-token.expiry:P7D}")
     private Duration refreshTokenExpiry;
-
-    @Value("${jwt.issuer:https://example.com}")
-    private String issuer;
 
     public String generateAccessToken(String id) {
         Instant now = Instant.now();
@@ -37,7 +34,6 @@ public class JwtTokenUtil {
                 new NoDataFoundException("no user found for id " + id));
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer(issuer)
                 .issuedAt(now)
                 .expiresAt(now.plus(accessTokenExpiry))
                 .subject(user.getId())
@@ -55,7 +51,6 @@ public class JwtTokenUtil {
                 new NoDataFoundException("no user found for id " + id));
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer(issuer)
                 .issuedAt(now)
                 .expiresAt(now.plus(refreshTokenExpiry))
                 .subject(user.getId()).claim("userId", user.getId())

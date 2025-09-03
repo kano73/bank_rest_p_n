@@ -3,7 +3,6 @@ package org.example.bank_rest_p_n.service;
 import lombok.RequiredArgsConstructor;
 import org.example.bank_rest_p_n.model.entity.MyCard;
 import org.example.bank_rest_p_n.model.entity.MyUser;
-import org.example.bank_rest_p_n.model.dto.CreateCardRequestDTO;
 import org.example.bank_rest_p_n.model.enumClass.CardStatus;
 import org.example.bank_rest_p_n.repository.CardRepository;
 import org.example.bank_rest_p_n.repository.UserRepository;
@@ -13,16 +12,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * CardGenerator — [comment]
+ * CardGeneratorImpl — [comment]
  *
  * @author Pavel Nenahov
  * @version 1.0
  * @since 03/09/2025
  */
-//TODO: create interfaces!!!
+
 @Service
 @RequiredArgsConstructor
-public class CardGenerator {
+public class CardGeneratorImpl implements CardGenerator {
     private final UserRepository userRepository;
     private final CardRepository cardRepository;
 

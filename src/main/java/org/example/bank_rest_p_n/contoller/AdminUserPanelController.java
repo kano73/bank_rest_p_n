@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.bank_rest_p_n.model.dto.AdminUpdateUserDTO;
 import org.example.bank_rest_p_n.model.dto.FilterUserDTO;
 import org.example.bank_rest_p_n.model.entity.MyUser;
-import org.example.bank_rest_p_n.service.UserService;
+import org.example.bank_rest_p_n.service.UserServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,20 +21,20 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class AdminUserPanelController {
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     @PutMapping("/block_user")
     private Boolean blockUser(@RequestBody @Valid AdminUpdateUserDTO requestDTO) {
-        return userService.blockUser(requestDTO);
+        return userServiceImpl.blockUser(requestDTO);
     }
 
     @DeleteMapping("/delete_user")
     private Boolean deleteUser(@RequestBody @Valid AdminUpdateUserDTO requestDTO) {
-        return userService.deleteUser(requestDTO);
+        return userServiceImpl.deleteUser(requestDTO);
     }
 
     @GetMapping("/get_users")
     private List<MyUser> getUsers(@RequestBody FilterUserDTO requestDTO, @RequestParam("pageNumber") int pageNumber) {
-        return userService.getUsersByFilter(requestDTO, pageNumber);
+        return userServiceImpl.getUsersByFilter(requestDTO, pageNumber);
     }
 }

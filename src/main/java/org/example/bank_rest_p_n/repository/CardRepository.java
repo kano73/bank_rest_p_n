@@ -7,9 +7,6 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.Collection;
-import java.util.List;
-
 /**
  * CardRepository — [comment]
  *

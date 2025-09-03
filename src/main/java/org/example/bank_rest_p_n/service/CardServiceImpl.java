@@ -11,6 +11,7 @@ import org.example.bank_rest_p_n.model.entity.MyUser;
 import org.example.bank_rest_p_n.model.enumClass.CardStatus;
 import org.example.bank_rest_p_n.repository.CardRepository;
 import org.example.bank_rest_p_n.repository.specification.CardSpecifications;
+import org.example.bank_rest_p_n.service.api.CardService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * CardService — [comment]
+ * CardServiceImpl — [comment]
  *
  * @author Pavel Nenahov
  * @version 1.0
@@ -29,17 +30,17 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CardService {
+public class CardServiceImpl implements CardService {
 
     private final CardRepository cardRepository;
-    private final CardGenerator cardGenerator;
+    private final CardGeneratorImpl cardGeneratorImpl;
 
     @Value("${page.size.product:10}")
     private Integer PAGE_SIZE;
 
     @Transactional()
     public MyCard createCard(String userId) {
-        MyCard newCard = cardGenerator.generateCard(userId);
+        MyCard newCard = cardGeneratorImpl.generateCard(userId);
 
         return cardRepository.save(newCard);
     }

@@ -7,7 +7,7 @@ import org.example.bank_rest_p_n.model.dto.CardNumberDTO;
 import org.example.bank_rest_p_n.model.dto.CardResponseDTO;
 import org.example.bank_rest_p_n.model.dto.TransactionCardRequestDTO;
 import org.example.bank_rest_p_n.model.entity.MyCard;
-import org.example.bank_rest_p_n.service.CardService;
+import org.example.bank_rest_p_n.service.CardServiceImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,28 +26,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CardController {
 
-    private final CardService cardService;
+    private final CardServiceImpl cardServiceImpl;
 
     @PostMapping("/new_card")
     public MyCard newCard(@AuthenticationPrincipal MyUserDetails userDetails) {
-        return cardService.createCard(userDetails.myUser().getId());
+        return cardServiceImpl.createCard(userDetails.myUser().getId());
     }
 
     @GetMapping("/my_cards")
     public List<CardResponseDTO> myAccounts(@AuthenticationPrincipal MyUserDetails userDetails,
                                             @RequestParam("page") int page) {
-        return cardService.findUsersCardsById(userDetails.myUser().getId(), page);
+        return cardServiceImpl.findUsersCardsById(userDetails.myUser().getId(), page);
     }
 
     @GetMapping("/balance")
     public BigDecimal balance(@AuthenticationPrincipal MyUserDetails userDetails,
                               @RequestBody CardNumberDTO requestDTO) {
-        return cardService.getBalanceOfCard(userDetails.myUser().getId(), requestDTO.getCardNumber());
+        return cardServiceImpl.getBalanceOfCard(userDetails.myUser().getId(), requestDTO.getCardNumber());
     }
 
     @PutMapping("/transaction")
     public Boolean updateCardInfo(@AuthenticationPrincipal MyUserDetails userDetails,
                                   @RequestBody @Valid TransactionCardRequestDTO requestDTO){
-        return cardService.transaction(userDetails.myUser(), requestDTO);
+        return cardServiceImpl.transaction(userDetails.myUser(), requestDTO);
     }
 }

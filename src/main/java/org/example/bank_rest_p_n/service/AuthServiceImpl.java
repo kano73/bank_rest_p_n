@@ -1,19 +1,14 @@
 package org.example.bank_rest_p_n.service;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
-import com.mary.sharik.config.security.jwt.JwtTokenUtil;
-import com.mary.sharik.exception.NoDataFoundException;
-import com.mary.sharik.exception.ValidationFailedException;
-import com.mary.sharik.model.dto.request.AuthRequest;
-import com.mary.sharik.model.entity.MyUser;
-import com.mary.sharik.model.enumClass.TokenType;
-import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.bank_rest_p_n.config.jwt.JwtTokenUtil;
+import org.example.bank_rest_p_n.exception.ValidationFailedException;
+import org.example.bank_rest_p_n.model.dto.AuthRequestDTO;
+import org.example.bank_rest_p_n.model.entity.MyUser;
+import org.example.bank_rest_p_n.model.enumClass.TokenType;
+import org.example.bank_rest_p_n.service.api.AuthService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,18 +19,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.time.Duration;
-import java.util.Collections;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 @Getter
-public class AuthService {
+public class AuthServiceImpl implements AuthService {
     private final JwtTokenUtil jwtTokenUtil;
-    private final MyUserService myUserService;
+    private final UserServiceImpl myUserServiceImpl;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtDecoder jwtDecoder;
@@ -46,33 +38,8 @@ public class AuthService {
     @Value("${max.age.refresh:P7D}")
     private Duration expirationTimeRefresh;
 
-    private GoogleIdTokenVerifier verifier;
-
-    @Value("${spring.security.oauth2.client.registration.google.client-id}")
-    private String GOOGLE_CLIENT_ID;
-
-    @PostConstruct
-    public void init() {
-        verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), GsonFactory.getDefaultInstance()).setAudience(Collections.singletonList(GOOGLE_CLIENT_ID)).build();
-    }
-
-    public ResponseEntity<?> loginWithGoogleIdToken(String token) {
-        try {
-            GoogleIdToken idToken = verifier.verify(token);
-            if (idToken == null) {
-                throw new ValidationFailedException("");
-            }
-            GoogleIdToken.Payload payload = idToken.getPayload();
-            String email = payload.getEmail();
-            MyUser user = myUserService.findByEmail(email);
-            return generateTokensWithId(user.getId());
-        } catch (ValidationFailedException | NoDataFoundException | GeneralSecurityException | IOException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please register");
-        }
-    }
-
-    public ResponseEntity<?> loginProcess(AuthRequest request) {
-        MyUser user = myUserService.findByEmail(request.getEmail());
+    public ResponseEntity<?> loginProcess(AuthRequestDTO request) {
+        MyUser user = myUserServiceImpl.findUserByEmail(request.getEmail());
 
         if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");

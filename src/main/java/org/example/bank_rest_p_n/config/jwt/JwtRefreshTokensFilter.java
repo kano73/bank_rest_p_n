@@ -1,11 +1,5 @@
 package org.example.bank_rest_p_n.config.jwt;
 
-import com.mary.sharik.exception.NoDataFoundException;
-import com.mary.sharik.model.details.MyUserDetails;
-import com.mary.sharik.model.entity.MyUser;
-import com.mary.sharik.model.enumClass.TokenType;
-import com.mary.sharik.repository.MyUserRepository;
-import com.mary.sharik.service.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -13,6 +7,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.bank_rest_p_n.exception.NoDataFoundException;
+import org.example.bank_rest_p_n.model.details.MyUserDetails;
+import org.example.bank_rest_p_n.model.entity.MyUser;
+import org.example.bank_rest_p_n.model.enumClass.TokenType;
+import org.example.bank_rest_p_n.repository.UserRepository;
+import org.example.bank_rest_p_n.service.AuthServiceImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,31 +26,30 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtRefreshTokensFilter extends OncePerRequestFilter {
 
-    private static final Set<String> ALLOWED_PATHS = Set.of("/login", "/register", "/logout", "/auth/google");
+//    private static final Set<String> ALLOWED_PATHS = Set.of("/login", "/register", "/logout");
 
     private final JwtTokenUtil jwtTokenUtil;
-    private final MyUserRepository myUserRepository;
-    private final AuthService authService;
+    private final UserRepository myUserRepository;
+    private final AuthServiceImpl authServiceImpl;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-
+/*
         if (ALLOWED_PATHS.contains(request.getRequestURI())) {
             filterChain.doFilter(request, response);
             return;
         }
+*/
 
-        // Extract token
         Cookie[] cookies = request.getCookies();
         if (cookies == null || cookies.length == 0) {
             filterChain.doFilter(request, response);
@@ -75,15 +74,14 @@ public class JwtRefreshTokensFilter extends OncePerRequestFilter {
 
             token = jwtTokenUtil.generateAccessToken(userId);
 
-            ResponseCookie accessCookie = authService.tokenToCookie(token, TokenType.accessToken);
+            ResponseCookie accessCookie = authServiceImpl.tokenToCookie(token, TokenType.accessToken);
             ResponseCookie refreshCookie =
-                    authService.tokenToCookie(jwtTokenUtil.generateRefreshToken(userId), TokenType.refreshToken);
+                    authServiceImpl.tokenToCookie(jwtTokenUtil.generateRefreshToken(userId), TokenType.refreshToken);
 
             response.addHeader(HttpHeaders.SET_COOKIE, accessCookie.toString());
             response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
         }
 
-        // Set authentication
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             String userId = jwtTokenUtil.getUserIdFromToken(token);
 

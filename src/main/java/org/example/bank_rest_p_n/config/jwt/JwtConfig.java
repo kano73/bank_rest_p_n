@@ -24,9 +24,6 @@ public class JwtConfig {
     private final RSAPublicKey publicKey;
     private final RSAPrivateKey privateKey;
 
-    @Value("${jwt.issuer:https://example.com}")
-    private String issuer;
-
     public JwtConfig(@Value("${jwt.public.key:#{null}}") RSAPublicKey publicKey,
                      @Value("${jwt.private.key:#{null}}") RSAPrivateKey privateKey) {
         if (publicKey == null || privateKey == null) {
@@ -41,15 +38,7 @@ public class JwtConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(publicKey).build();
-
-        OAuth2TokenValidator<Jwt> audienceValidator = new JwtIssuerValidator(issuer);
-        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer(issuer);
-        OAuth2TokenValidator<Jwt> withAudience = new DelegatingOAuth2TokenValidator<>(withIssuer, audienceValidator);
-
-        jwtDecoder.setJwtValidator(withAudience);
-
-        return jwtDecoder;
+        return NimbusJwtDecoder.withPublicKey(publicKey).build();
     }
 
     @Bean

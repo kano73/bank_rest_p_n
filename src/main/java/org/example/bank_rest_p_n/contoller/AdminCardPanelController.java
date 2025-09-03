@@ -8,7 +8,7 @@ import org.example.bank_rest_p_n.model.dto.CreateCardRequestDTO;
 import org.example.bank_rest_p_n.model.dto.FilterCardDTO;
 import org.example.bank_rest_p_n.model.dto.UpdateStateDTO;
 import org.example.bank_rest_p_n.model.entity.MyCard;
-import org.example.bank_rest_p_n.service.CardService;
+import org.example.bank_rest_p_n.service.CardServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,27 +26,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminCardPanelController {
 
-    private final CardService cardService;
+    private final CardServiceImpl cardServiceImpl;
 
     @PostMapping("/new_card_for_user")
     public MyCard newCardForUser(@RequestBody CreateCardRequestDTO requestDTO) {
-        return cardService.createCard(requestDTO.getUserId());
+        return cardServiceImpl.createCard(requestDTO.getUserId());
     }
 
     @GetMapping("/users_cards")
     public List<MyCard> myAccounts(@RequestBody @NotNull FilterCardDTO filterCardDTO,
                                    @RequestParam("pageNumber") int pageNumber) {
-        return cardService.findCardsByFilter(filterCardDTO, pageNumber);
+        return cardServiceImpl.findCardsByFilter(filterCardDTO, pageNumber);
     }
 
     @PutMapping("/change_card_status")
     public Boolean changeCardStatus(@RequestBody UpdateStateDTO requestDTO) {
-        return cardService.updateCardStatus(requestDTO);
+        return cardServiceImpl.updateCardStatus(requestDTO);
     }
 
     @DeleteMapping("/delete_card")
     public Boolean deleteCard(@RequestBody @Valid DeleteCardDTO requestDTO){
-        return cardService.deleteCard(requestDTO);
+        return cardServiceImpl.deleteCard(requestDTO);
     }
 
 }

@@ -1,6 +1,5 @@
 package org.example.bank_rest_p_n.service;
 
-import ch.qos.logback.classic.encoder.JsonEncoder;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +13,7 @@ import org.example.bank_rest_p_n.model.entity.MyUser;
 import org.example.bank_rest_p_n.model.enumClass.MyRole;
 import org.example.bank_rest_p_n.repository.UserRepository;
 import org.example.bank_rest_p_n.repository.specification.UserSpecifications;
+import org.example.bank_rest_p_n.service.api.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * UserService — [comment]
+ * UserServiceImpl — [comment]
  *
  * @author Pavel Nenahov
  * @version 1.0
@@ -31,13 +31,18 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${page.size.product:10}")
     private Integer PAGE_SIZE;
-    private PasswordEncoder passwordEncoder;
+
+    public MyUser findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(()-> new NoDataFoundException("No user found with email :" + email));
+    }
 
     public Boolean blockUser(@Valid AdminUpdateUserDTO requestDTO) {
         MyUser user = userRepository.findById(requestDTO.getUserId())

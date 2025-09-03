@@ -10,5 +10,5 @@ package org.example.bank_rest_p_n.model.enumClass;
 
 public enum MyRole {
     USER,
-    ADMIN;
+    ADMIN
 }
