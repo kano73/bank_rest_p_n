@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.example.bank_rest_p_n.model.enumClass.MyRole;
 import org.hibernate.annotations.UuidGenerator;
 
 /**
@@ -33,4 +34,8 @@ public class MyUser {
     private String email;
 
     private String password;
+
+    private MyRole role;
+
+    private Boolean isBlocked;
 }
