@@ -1,0 +1,93 @@
+databaseChangeLog:
+- changeSet:
+    id: 1756996899920-1
+    author: pasha (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: my_card_pkey
+            name: id
+            type: VARCHAR(255)
+        - column:
+            name: balance
+            type: numeric(38, 2)
+        - column:
+            name: expiry_date
+            type: date
+        - column:
+            constraints:
+              nullable: false
+            name: number
+            type: VARCHAR(19)
+        - column:
+            name: status
+            type: VARCHAR(255)
+        - column:
+            constraints:
+              nullable: false
+            name: version
+            type: INTEGER
+        - column:
+            name: owner_id
+            type: VARCHAR(255)
+        tableName: my_card
+- changeSet:
+    id: 1756996899920-2
+    author: pasha (generated)
+    changes:
+    - createTable:
+        columns:
+        - column:
+            constraints:
+              nullable: false
+              primaryKey: true
+              primaryKeyName: my_user_pkey
+            name: id
+            type: VARCHAR(255)
+        - column:
+            name: email
+            type: VARCHAR(255)
+        - column:
+            name: first_name
+            type: VARCHAR(255)
+        - column:
+            name: is_blocked
+            type: BOOLEAN
+        - column:
+            name: last_name
+            type: VARCHAR(255)
+        - column:
+            name: password
+            type: VARCHAR(255)
+        - column:
+            name: role
+            type: SMALLINT
+        tableName: my_user
+- changeSet:
+    id: 1756996899920-3
+    author: pasha (generated)
+    changes:
+    - addUniqueConstraint:
+        columnNames: number
+        constraintName: ukfnt7lliat0v6vu8pv7rn40ao2
+        tableName: my_card
+- changeSet:
+    id: 1756996899920-4
+    author: pasha (generated)
+    changes:
+    - addForeignKeyConstraint:
+        baseColumnNames: owner_id
+        baseTableName: my_card
+        constraintName: fkcji8iq8q7f3224f2plchh066x
+        deferrable: false
+        initiallyDeferred: false
+        onDelete: NO ACTION
+        onUpdate: NO ACTION
+        referencedColumnNames: id
+        referencedTableName: my_user
+        validate: true
+

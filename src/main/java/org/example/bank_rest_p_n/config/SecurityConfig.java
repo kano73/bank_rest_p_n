@@ -63,9 +63,6 @@ public class SecurityConfig implements WebMvcConfigurer {
                                 .anyRequest().authenticated())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(oauth2 ->
-                        oauth2.jwt(jwt -> jwt.decoder(jwtDecoder))
-                                .authenticationEntryPoint(authFailHandler))
                 .addFilterBefore(jwtRefreshTokensFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(AbstractHttpConfigurer::disable);
 

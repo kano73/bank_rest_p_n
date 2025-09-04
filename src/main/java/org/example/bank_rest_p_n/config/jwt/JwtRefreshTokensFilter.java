@@ -26,13 +26,14 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtRefreshTokensFilter extends OncePerRequestFilter {
 
-//    private static final Set<String> ALLOWED_PATHS = Set.of("/login", "/register", "/logout");
+    private static final Set<String> ALLOWED_PATHS = Set.of("/login", "/register", "/logout");
 
     private final JwtTokenUtil jwtTokenUtil;
     private final UserRepository myUserRepository;
@@ -43,12 +44,11 @@ public class JwtRefreshTokensFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
-/*
+
         if (ALLOWED_PATHS.contains(request.getRequestURI())) {
             filterChain.doFilter(request, response);
             return;
         }
-*/
 
         Cookie[] cookies = request.getCookies();
         if (cookies == null || cookies.length == 0) {

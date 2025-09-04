@@ -6,6 +6,7 @@ import org.example.bank_rest_p_n.model.entity.MyUser;
 import org.example.bank_rest_p_n.model.enumClass.CardStatus;
 import org.example.bank_rest_p_n.repository.CardRepository;
 import org.example.bank_rest_p_n.repository.UserRepository;
+import org.example.bank_rest_p_n.service.api.CardGenerator;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
