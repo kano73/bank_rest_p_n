@@ -87,7 +87,12 @@ public class UserServiceImpl implements UserService {
         if(dto.getFirstName() != null) user.setFirstName(dto.getFirstName());
         if(dto.getLastName() != null) user.setLastName(dto.getLastName());
         if(dto.getEmail() != null) user.setEmail(dto.getEmail());
-        if(dto.getPassword() != null) user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        if(dto.getPassword() != null) {
+            if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword())) {
+                throw new IllegalOperation("Old password is incorrect");
+            }
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
 
         userRepository.save(user);
 

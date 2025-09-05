@@ -65,7 +65,7 @@ databaseChangeLog:
             type: VARCHAR(255)
         - column:
             name: role
-            type: SMALLINT
+            type: VARCHAR(255)
         tableName: my_user
 - changeSet:
     id: 1756996899920-3
@@ -90,4 +90,42 @@ databaseChangeLog:
         referencedColumnNames: id
         referencedTableName: my_user
         validate: true
-
+- changeSet:
+      id: 1756996899920-5
+      author: pasha
+      changes:
+          - createIndex:
+                indexName: idx_my_card_status
+                tableName: my_card
+                columns:
+                    - column:
+                          name: status
+          - createIndex:
+                indexName: idx_my_card_balance
+                tableName: my_card
+                columns:
+                    - column:
+                          name: balance
+          - createIndex:
+                indexName: idx_my_user_role
+                tableName: my_user
+                columns:
+                    - column:
+                          name: role
+          - createIndex:
+                indexName: idx_my_user_is_blocked
+                tableName: my_user
+                columns:
+                    - column:
+                          name: is_blocked
+- changeSet:
+      id: 1756996899920-6
+      author: pasha
+      changes:
+          - sql: |
+                CREATE EXTENSION IF NOT EXISTS pg_trgm;
+                CREATE INDEX idx_my_card_id_trgm ON my_card USING gin (id gin_trgm_ops);
+                CREATE INDEX idx_my_card_owner_trgm ON my_card USING gin (owner_id gin_trgm_ops);
+                CREATE INDEX idx_my_user_first_name_trgm ON my_user USING gin (lower(first_name) gin_trgm_ops);
+                CREATE INDEX idx_my_user_last_name_trgm ON my_user USING gin (lower(last_name) gin_trgm_ops);
+                CREATE INDEX idx_my_user_email_trgm ON my_user USING gin (lower(email) gin_trgm_ops);

@@ -1,10 +1,10 @@
 package org.example.bank_rest_p_n.service;
 
-import jakarta.persistence.OptimisticLockException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.example.bank_rest_p_n.exception.IllegalOperation;
+import org.example.bank_rest_p_n.exception.NoDataFoundException;
 import org.example.bank_rest_p_n.model.dto.*;
 import org.example.bank_rest_p_n.model.entity.MyCard;
 import org.example.bank_rest_p_n.model.entity.MyUser;
@@ -15,6 +15,7 @@ import org.example.bank_rest_p_n.service.api.CardService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -38,13 +39,17 @@ public class CardServiceImpl implements CardService {
     @Value("${page.size.product:10}")
     private Integer PAGE_SIZE;
 
-    @Transactional()
-    public MyCard createCard(String userId) {
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Override
+    public CardResponseDTO createCard(String userId) {
         MyCard newCard = cardGeneratorImpl.generateCard(userId);
 
-        return cardRepository.save(newCard);
+        cardRepository.save(newCard);
+
+        return new CardResponseDTO(newCard);
     }
 
+    @Override
     public List<CardResponseDTO> findUsersCardsById(String userId, int pageNumber) {
         return cardRepository.findAllByOwner_Id(userId, PageRequest.of(pageNumber, PAGE_SIZE))
                 .getContent()
@@ -53,54 +58,69 @@ public class CardServiceImpl implements CardService {
     }
 
     @Transactional
+    @Override
     public Boolean transaction(MyUser myUser, @Valid TransactionCardRequestDTO requestDTO) {
-        try {
+        MyCard fromCard = cardRepository.findById(requestDTO.getFromCardId())
+                .orElseThrow(()-> new NoDataFoundException("No card found"));
+        MyCard toCard = cardRepository.findById(requestDTO.getToCardId())
+                .orElseThrow(()-> new NoDataFoundException("No card found"));
 
-            MyCard fromCard = cardRepository.findByNumber(requestDTO.getFromCard());
-            MyCard toCard = cardRepository.findByNumber(requestDTO.getToCard());
-
-            if((fromCard == null || toCard == null) ||
-                    (!fromCard.getOwner().getId().equals(myUser.getId()) ||
-                            !toCard.getOwner().getId().equals(myUser.getId())) ) {
-                throw new IllegalOperation("Illegal operation: you are not owner of card/cards");
-            }
-
-            if( !fromCard.getStatus().equals(CardStatus.ACTIVE) || !toCard.getStatus().equals(CardStatus.ACTIVE)) {
-                throw new IllegalOperation("Illegal operation: card/cards is blocked");
-            }
-
-            fromCard.setBalance(fromCard.getBalance().subtract(requestDTO.getAmount()));
-            toCard.setBalance(toCard.getBalance().add(requestDTO.getAmount()));
-            cardRepository.save(fromCard);
-            cardRepository.save(toCard);
-            return true;
-
-        } catch (OptimisticLockException e) {
-            throw new IllegalStateException("Transaction conflict, try again", e);
+        if( !fromCard.getStatus().equals(CardStatus.ACTIVE) || !toCard.getStatus().equals(CardStatus.ACTIVE)) {
+            throw new IllegalOperation("Illegal operation: card/cards is blocked");
         }
+
+        fromCard.setBalance(fromCard.getBalance().subtract(requestDTO.getAmount()));
+        toCard.setBalance(toCard.getBalance().add(requestDTO.getAmount()));
+        cardRepository.save(fromCard);
+        cardRepository.save(toCard);
+        return true;
     }
 
+    @Transactional
+    @Override
     public Boolean updateCardStatus(UpdateStateDTO requestDTO) {
-        MyCard card = cardRepository.findByNumber(requestDTO.getCardNumber());
+        MyCard card = cardRepository.findById(requestDTO.getCardId())
+                .orElseThrow(()-> new NoDataFoundException("No card found"));
         card.setStatus(requestDTO.getStatus());
         cardRepository.save(card);
         return true;
     }
 
+    @Override
     public List<MyCard> findCardsByFilter(@NotNull FilterCardDTO filterCardDTO, int pageNumber) {
         return cardRepository.findAll(CardSpecifications.filter(filterCardDTO),PageRequest.of(pageNumber, PAGE_SIZE))
                 .getContent();
     }
 
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Override
     public Boolean deleteCard(@Valid DeleteCardDTO requestDTO) {
-        return cardRepository.deleteByNumber(requestDTO.getCardNumber());
+        return cardRepository.deleteByNumber(requestDTO.getCardId());
     }
 
-    public BigDecimal getBalanceOfCard(String id, String cardNumber) {
-        MyCard byNumber = cardRepository.findByNumber(cardNumber);
+    @Override
+    public BigDecimal getBalanceOfCard(String id, String cardId) {
+        MyCard byNumber = cardRepository.findById(cardId)
+                .orElseThrow(()-> new NoDataFoundException("No card found"));
         if(!byNumber.getOwner().getId().equals(id)) {
             throw new IllegalOperation("Illegal operation: you are not owner of card");
         }
         return byNumber.getBalance();
+    }
+
+    @Transactional
+    @Override
+    public Boolean topUp(TopUpDTO requestDTO) {
+        MyCard toCard = cardRepository.findById(requestDTO.getCardId()).orElseThrow(
+                ()-> new NoDataFoundException("Card does not exists.")
+        );
+
+        if(!toCard.getStatus().equals(CardStatus.ACTIVE)) {
+            throw new IllegalOperation("Illegal operation: card/cards is blocked");
+        }
+
+        toCard.setBalance(toCard.getBalance().add(requestDTO.getAmount()));
+        cardRepository.save(toCard);
+        return true;
     }
 }

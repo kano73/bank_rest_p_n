@@ -1,7 +1,7 @@
 package org.example.bank_rest_p_n.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,21 +21,28 @@ import org.hibernate.annotations.UuidGenerator;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class MyUser {
     @Id
     @UuidGenerator
+    @EqualsAndHashCode.Include
     private String id;
 
     private String firstName;
 
     private String lastName;
 
+    @NotNull
+    @Column(unique = true)
     private String email;
 
+    @NotNull
     private String password;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private MyRole role;
 
-    private Boolean isBlocked;
+    @NotNull
+    private Boolean isBlocked = Boolean.FALSE;
 }

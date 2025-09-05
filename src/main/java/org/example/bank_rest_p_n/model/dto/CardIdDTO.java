@@ -3,10 +3,9 @@ package org.example.bank_rest_p_n.model.dto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.example.bank_rest_p_n.model.enumClass.CardStatus;
 
 /**
- * UpdateStateDTO — [comment]
+ * CardIdDTO — [comment]
  *
  * @author Pavel Nenahov
  * @version 1.0
@@ -15,10 +14,7 @@ import org.example.bank_rest_p_n.model.enumClass.CardStatus;
 
 @Getter
 @Setter
-public class UpdateStateDTO {
-    @NotNull
-    private CardStatus status;
-
+public class CardIdDTO {
     @NotNull
     private String cardId;
 }

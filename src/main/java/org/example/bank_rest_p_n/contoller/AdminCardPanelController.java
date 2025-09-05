@@ -3,10 +3,7 @@ package org.example.bank_rest_p_n.contoller;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.example.bank_rest_p_n.model.dto.DeleteCardDTO;
-import org.example.bank_rest_p_n.model.dto.CreateCardRequestDTO;
-import org.example.bank_rest_p_n.model.dto.FilterCardDTO;
-import org.example.bank_rest_p_n.model.dto.UpdateStateDTO;
+import org.example.bank_rest_p_n.model.dto.*;
 import org.example.bank_rest_p_n.model.entity.MyCard;
 import org.example.bank_rest_p_n.service.CardServiceImpl;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +26,7 @@ public class AdminCardPanelController {
     private final CardServiceImpl cardServiceImpl;
 
     @PostMapping("/new_card_for_user")
-    public MyCard newCardForUser(@RequestBody CreateCardRequestDTO requestDTO) {
+    public CardResponseDTO newCardForUser(@RequestBody CreateCardRequestDTO requestDTO) {
         return cardServiceImpl.createCard(requestDTO.getUserId());
     }
 

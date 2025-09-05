@@ -3,10 +3,10 @@ package org.example.bank_rest_p_n.contoller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.bank_rest_p_n.model.details.MyUserDetails;
-import org.example.bank_rest_p_n.model.dto.CardNumberDTO;
+import org.example.bank_rest_p_n.model.dto.CardIdDTO;
 import org.example.bank_rest_p_n.model.dto.CardResponseDTO;
+import org.example.bank_rest_p_n.model.dto.TopUpDTO;
 import org.example.bank_rest_p_n.model.dto.TransactionCardRequestDTO;
-import org.example.bank_rest_p_n.model.entity.MyCard;
 import org.example.bank_rest_p_n.service.CardServiceImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +28,13 @@ public class CardController {
 
     private final CardServiceImpl cardServiceImpl;
 
+    @PutMapping("/top_up")
+    public Boolean topUp(@RequestBody @Valid TopUpDTO requestDTO) {
+        return cardServiceImpl.topUp(requestDTO);
+    }
+
     @PostMapping("/new_card")
-    public MyCard newCard(@AuthenticationPrincipal MyUserDetails userDetails) {
+    public CardResponseDTO newCard(@AuthenticationPrincipal MyUserDetails userDetails) {
         return cardServiceImpl.createCard(userDetails.myUser().getId());
     }
 
@@ -41,8 +46,8 @@ public class CardController {
 
     @GetMapping("/balance")
     public BigDecimal balance(@AuthenticationPrincipal MyUserDetails userDetails,
-                              @RequestBody CardNumberDTO requestDTO) {
-        return cardServiceImpl.getBalanceOfCard(userDetails.myUser().getId(), requestDTO.getCardNumber());
+                              @RequestBody CardIdDTO requestDTO) {
+        return cardServiceImpl.getBalanceOfCard(userDetails.myUser().getId(), requestDTO.getCardId());
     }
 
     @PutMapping("/transaction")

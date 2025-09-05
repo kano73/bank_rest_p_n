@@ -20,10 +20,10 @@ import java.math.BigDecimal;
 @Setter
 public class TransactionCardRequestDTO {
     @NotBlank
-    private String fromCard;
+    private String fromCardId;
 
     @NotBlank
-    private String toCard;
+    private String toCardId;
 
     @NotNull
     @DecimalMin("0.01")

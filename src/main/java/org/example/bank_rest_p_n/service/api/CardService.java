@@ -8,11 +8,12 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface CardService {
-    MyCard createCard(String userId);
+    CardResponseDTO createCard(String userId);
     List<CardResponseDTO> findUsersCardsById(String userId, int pageNumber);
     Boolean transaction(MyUser myUser, TransactionCardRequestDTO requestDTO);
     Boolean updateCardStatus(UpdateStateDTO requestDTO);
     List<MyCard> findCardsByFilter(FilterCardDTO filterCardDTO, int pageNumber);
     Boolean deleteCard(DeleteCardDTO requestDTO);
     BigDecimal getBalanceOfCard(String id, String cardNumber);
+    Boolean topUp(TopUpDTO requestDTO);
 }

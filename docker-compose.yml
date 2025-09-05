@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: bank_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: bank_db
+      POSTGRES_USER: qweqwe
+      POSTGRES_PASSWORD: qweqwe123
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: bank_app
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bank_db
+      SPRING_DATASOURCE_USERNAME: qweqwe
+      SPRING_DATASOURCE_PASSWORD: qweqwe123
+      SPRING_JPA_DATABASE-PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_LIQUIBASE_CHANGE-LOG: classpath:/db/changelog/db.changelog-master.yaml
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
