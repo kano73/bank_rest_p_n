@@ -1,88 +1,69 @@
-Возможности
-    Аутентификация и регистрация пользователей
-    
-    Управление профилем (обновление личных данных)
-    
-    Работа с картами
-    
-    создание карт
-    
-    пополнение
-    
-    перевод между картами
-    
-    просмотр баланса и списка карт
+# Monolit backend Spring boot app for Bank Simulation
 
-Админ-панель
-    
-    управление пользователями (блокировка, удаление, фильтрация)
-    
-    управление картами (создание, блокировка/разблокировка, удаление, поиск)
-    
-    Структура контроллеров
-    
-    AuthController → авторизация / выход
-    
-    UserController → регистрация, обновление данных
-    
-    CardController → работа с картами и транзакциями
-    
-    AdminUserPanelController → админ-функции для пользователей
-    
-    AdminCardPanelController → админ-функции для карт
+**Features**
 
-API Эндпоинты
-    Аутентификация
-        
-        POST /login → вход
-        
-        POST /logout → выход
-    
-    Пользователь
-    
-        POST /register → регистрация
-        
-        PUT /update_my_info → обновление профиля
-        
-    Карты (пользователь)
-    
-        POST /new_card → создать карту
-        
-        GET /my_cards?page={page} → список карт
-        
-        GET /balance → баланс карты
-        
-        PUT /top_up → пополнить карту
-        
-        PUT /transaction → перевод средств
-    
-    Админ (пользователи)
-    
-        PUT /block_user → блокировка
-        
-        DELETE /delete_user → удаление
-        
-        GET /get_users?pageNumber={page} → список с фильтрацией
-    
-    Админ (карты)
-    
-        POST /admin/new_card_for_user → создать карту пользователю
-        
-        GET /admin/users_cards?pageNumber={page} → список карт с фильтрацией
-        
-        PUT /admin/change_card_status → изменить статус карты
-        
-        DELETE /admin/delete_card → удалить карту
+* User authentication and registration
+* Profile management (updating personal data)
+* Working with cards
 
- Запуск проекта
-Требования
+  * Creating cards
+  * Top-up
+  * Transfer between cards
+  * Viewing balance and list of cards
 
-Java 17+
+**Admin Panel**
 
-Maven 3+
+* User management (block, delete, filter)
+* Card management (create, block/unblock, delete, search)
 
-PostgreSQL (или другой SQL-бэкенд)
+**Controller Structure**
 
-Приложение поднимется на:
+* `AuthController` → login / logout
+* `UserController` → registration, updating data
+* `CardController` → card and transaction operations
+* `AdminUserPanelController` → admin functions for users
+* `AdminCardPanelController` → admin functions for cards
 
-http://localhost:8080
+**API Endpoints**
+
+*Authentication*
+
+* `POST /login` → login
+* `POST /logout` → logout
+
+*User*
+
+* `POST /register` → register
+* `PUT /update_my_info` → update profile
+
+*Cards (user)*
+
+* `POST /new_card` → create card
+* `GET /my_cards?page={page}` → list of cards
+* `GET /balance` → card balance
+* `PUT /top_up` → top up card
+* `PUT /transaction` → transfer funds
+
+*Admin (users)*
+
+* `PUT /block_user` → block user
+* `DELETE /delete_user` → delete user
+* `GET /get_users?pageNumber={page}` → list with filtering
+
+*Admin (cards)*
+
+* `POST /admin/new_card_for_user` → create a card for a user
+* `GET /admin/users_cards?pageNumber={page}` → list of cards with filtering
+* `PUT /admin/change_card_status` → change card status
+* `DELETE /admin/delete_card` → delete card
+
+**Project Setup**
+
+**Requirements**
+
+* Java 17+
+* Maven 3+
+* PostgreSQL (or another SQL backend)
+
+The application will run on:
+[http://localhost:8080](http://localhost:8080)
